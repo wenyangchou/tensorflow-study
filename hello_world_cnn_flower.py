@@ -105,3 +105,15 @@ train_op = tf.train.AdamOptimizer(learning_rate=0.001).minimize(loss)
 correct_prediction = tf.equal(tf.cast(tf.argmax(logits, 1), tf.int32), y_)
 acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+
+# 取数据
+def minibatches(inputs=None, targets=None, batch_size=None, shuffle=False):
+    if shuffle:
+        indices = np.arange(len(inputs))
+        np.random.shuffle(indices)
+    for start_idx in range(0, len(inputs) - batch_size + 1, batch_size):
+        if shuffle:
+            excerpt = indices[start_idx:start_idx + batch_size]
+        else:
+            excerpt = slice(start_idx, start_idx + batch_size)
+        yield inputs[excerpt], targets[excerpt]
